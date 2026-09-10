@@ -1,0 +1,54 @@
+name: Publish Merged Catalog Plan
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/publish-merged-plan.yml"
+
+permissions:
+  contents: write
+  actions: read
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download successful merged artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: merged-catalog-plans-34523390701
+          path: .artifact
+          github-token: ${{ github.token }}
+          repository: BigOfertas/catalog-worker-temp
+          run-id: 34523390701
+
+      - name: Validate and publish immutable source plan
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const p = '.artifact/merged-plan.json';
+          const d = JSON.parse(fs.readFileSync(p, 'utf8'));
+          if (d?.summary?.albums !== 36 || d?.summary?.products !== 243 || d?.summary?.variants !== 304 || d?.summary?.images !== 1518) {
+            throw new Error(`Unexpected merged summary: ${JSON.stringify(d?.summary)}`);
+          }
+          const la = d.products.filter((x) => x.competition === 'La Liga').length;
+          const sa = d.products.filter((x) => x.competition === 'Serie A').length;
+          if (la !== 154 || sa !== 89) throw new Error(`Unexpected competition counts LaLiga=${la} SerieA=${sa}`);
+          fs.mkdirSync('published', { recursive: true });
+          fs.copyFileSync(p, 'published/merged-plan.json');
+          console.log(`PUBLISH_PLAN_OK albums=36 products=243 variants=304 images=1518 laliga=${la} seriea=${sa}`);
+          NODE
+
+          git config user.name "BigOfertas Catalog Worker"
+          git config user.email "contato@bigofertas.net"
+          git add published/merged-plan.json
+          if git diff --cached --quiet; then
+            echo "Published plan already current."
+            exit 0
+          fi
+          git commit -m "worker: publish merged La Liga and Serie A plan"
+          git push origin main

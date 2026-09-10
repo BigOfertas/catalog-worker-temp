@@ -1,0 +1,202 @@
+name: Process Catalog Albums
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/process-catalog.yml"
+      - "manifests/groups.json"
+      - "scripts/process-album.mjs"
+      - "scripts/merge-plans.mjs"
+  workflow_dispatch:
+    inputs:
+      groups:
+        description: "IDs dos grupos separados por vírgula"
+        required: false
+        default: "la-liga,serie-a"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: public-catalog-worker-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  resolve:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.resolve.outputs.matrix }}
+      album_count: ${{ steps.resolve.outputs.album_count }}
+      selected_groups: ${{ steps.resolve.outputs.selected_groups }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - id: resolve
+        name: Resolve public catalog matrix
+        env:
+          REQUESTED_GROUPS: ${{ github.event.inputs.groups || 'la-liga,serie-a' }}
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from "node:fs";
+          const manifest = JSON.parse(fs.readFileSync("manifests/groups.json", "utf8"));
+          const requested = new Set(
+            String(process.env.REQUESTED_GROUPS || "la-liga,serie-a")
+              .split(",")
+              .map((item) => item.trim())
+              .filter(Boolean),
+          );
+          const selected = (manifest.groups || []).filter((group) => requested.has(group.id));
+          if (!selected.length) throw new Error("Nenhum grupo válido selecionado.");
+          const unknown = [...requested].filter((id) => !selected.some((group) => group.id === id));
+          if (unknown.length) throw new Error(`Grupos não encontrados: ${unknown.join(", ")}`);
+
+          const include = [];
+          for (const group of selected) {
+            for (const [index, album] of (group.albums || []).entries()) {
+              if (!album?.name || !/^https:\/\/photos\.google\.com\/share\//.test(album?.url || "")) {
+                throw new Error(`${group.id}: álbum inválido na posição ${index + 1}.`);
+              }
+              include.push({
+                key: `${group.id}-${String(index + 1).padStart(2, "0")}`,
+                groupId: group.id,
+                groupName: group.name,
+                competition: group.competition || "",
+                league: group.league || "",
+                team: album.name,
+                url: album.url,
+              });
+            }
+          }
+          if (!include.length) throw new Error("Matriz de álbuns vazia.");
+          fs.appendFileSync(process.env.GITHUB_OUTPUT, `matrix=${JSON.stringify({ include })}\n`);
+          fs.appendFileSync(process.env.GITHUB_OUTPUT, `album_count=${include.length}\n`);
+          fs.appendFileSync(process.env.GITHUB_OUTPUT, `selected_groups=${[...requested].join(",")}\n`);
+          console.log(`PUBLIC_WORKER_MATRIX_OK groups=${selected.map((g) => g.id).join(",")} albums=${include.length}`);
+          NODE
+
+  process:
+    needs: resolve
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    strategy:
+      fail-fast: false
+      max-parallel: 10
+      matrix: ${{ fromJSON(needs.resolve.outputs.matrix) }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install Playwright
+        run: |
+          npm install --no-save --package-lock=false playwright@latest
+          npx playwright install --with-deps chromium
+
+      - name: Process complete public Google Photos album
+        env:
+          GROUP_ID: ${{ matrix.groupId }}
+          GROUP_NAME: ${{ matrix.groupName }}
+          COMPETITION: ${{ matrix.competition }}
+          LEAGUE: ${{ matrix.league }}
+          TEAM: ${{ matrix.team }}
+          ALBUM_URL: ${{ matrix.url }}
+          ARTIFACT_KEY: ${{ matrix.key }}
+        run: |
+          set -euo pipefail
+          mkdir -p ".artifacts/$ARTIFACT_KEY"
+          node scripts/process-album.mjs \
+            --group-id "$GROUP_ID" \
+            --group-name "$GROUP_NAME" \
+            --competition "$COMPETITION" \
+            --league "$LEAGUE" \
+            --team "$TEAM" \
+            --url "$ALBUM_URL" \
+            --output ".artifacts/$ARTIFACT_KEY/plan.json"
+
+      - name: Audit generated plan
+        env:
+          ARTIFACT_KEY: ${{ matrix.key }}
+          TEAM: ${{ matrix.team }}
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from "node:fs";
+          const key = process.env.ARTIFACT_KEY;
+          const team = process.env.TEAM;
+          const plan = JSON.parse(fs.readFileSync(`.artifacts/${key}/plan.json`, "utf8"));
+          const products = plan.products || [];
+          const variants = products.reduce((sum, product) => sum + (product.variants?.length || 0), 0);
+          const images = products.reduce(
+            (sum, product) => sum + (product.variants || []).reduce((s, variant) => s + (variant.images?.length || 0), 0),
+            0,
+          );
+          if (!products.length || !variants || !images) throw new Error(`${team}: plano incompleto.`);
+          if (new Set(products.map((product) => product.sourceKey)).size !== products.length) {
+            throw new Error(`${team}: sourceKey duplicada.`);
+          }
+          console.log(`PUBLIC_PLAN_AUDIT_OK team=${team} products=${products.length} variants=${variants} images=${images}`);
+          NODE
+
+      - name: Upload public processing plan
+        uses: actions/upload-artifact@v4
+        with:
+          name: plan-${{ matrix.key }}
+          retention-days: 14
+          if-no-files-found: error
+          path: .artifacts/${{ matrix.key }}/plan.json
+
+  merge:
+    needs:
+      - resolve
+      - process
+    if: needs.process.result == 'success'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Download every generated plan
+        uses: actions/download-artifact@v4
+        with:
+          pattern: plan-*
+          path: .artifacts/downloaded
+          merge-multiple: false
+
+      - name: Merge and audit all plans
+        env:
+          EXPECTED_ALBUMS: ${{ needs.resolve.outputs.album_count }}
+          SELECTED_GROUPS: ${{ needs.resolve.outputs.selected_groups }}
+        run: |
+          node scripts/merge-plans.mjs .artifacts/downloaded .artifacts/merged-plan.json
+          node --input-type=module <<'NODE'
+          import fs from "node:fs";
+          const merged = JSON.parse(fs.readFileSync(".artifacts/merged-plan.json", "utf8"));
+          const expected = Number(process.env.EXPECTED_ALBUMS);
+          if (merged.summary?.albums !== expected) {
+            throw new Error(`Álbuns consolidados: ${merged.summary?.albums}; esperados: ${expected}.`);
+          }
+          if (!merged.summary?.products || !merged.summary?.variants || !merged.summary?.images) {
+            throw new Error("Consolidação sem produtos, variantes ou imagens.");
+          }
+          const groups = new Set((merged.albums || []).map((item) => item.group));
+          for (const group of String(process.env.SELECTED_GROUPS || "").split(",").filter(Boolean)) {
+            if (!groups.has(group)) throw new Error(`Grupo ausente da consolidação: ${group}`);
+          }
+          console.log(
+            `PUBLIC_CATALOG_MERGE_OK albums=${merged.summary.albums} products=${merged.summary.products} variants=${merged.summary.variants} images=${merged.summary.images}`,
+          );
+          NODE
+
+      - name: Upload consolidated handoff artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: merged-catalog-plans-${{ github.run_id }}
+          retention-days: 30
+          if-no-files-found: error
+          path: .artifacts/merged-plan.json

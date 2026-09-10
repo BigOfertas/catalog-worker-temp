@@ -1,0 +1,156 @@
+name: Process Remaining Club Albums
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/process-next.yml"
+      - "manifests/next-groups.json"
+      - "scripts/process-album.mjs"
+      - "scripts/merge-plans.mjs"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: public-catalog-worker-next-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  resolve:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.resolve.outputs.matrix }}
+      album_count: ${{ steps.resolve.outputs.album_count }}
+      selected_groups: ${{ steps.resolve.outputs.selected_groups }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: resolve
+        name: Resolve remaining club matrix
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from "node:fs";
+          const manifest = JSON.parse(fs.readFileSync("manifests/next-groups.json", "utf8"));
+          const groups = manifest.groups || [];
+          if (!groups.length) throw new Error("Manifesto vazio.");
+          const include = [];
+          for (const group of groups) {
+            for (const [index, album] of (group.albums || []).entries()) {
+              if (!album?.name || !/^https:\/\/photos\.google\.com\/share\//.test(album?.url || "")) {
+                throw new Error(`${group.id}: álbum inválido na posição ${index + 1}.`);
+              }
+              include.push({
+                key: `${group.id}-${String(index + 1).padStart(2, "0")}`,
+                groupId: group.id,
+                groupName: group.name,
+                competition: group.competition || "",
+                league: group.league || "",
+                team: album.name,
+                url: album.url,
+              });
+            }
+          }
+          fs.appendFileSync(process.env.GITHUB_OUTPUT, `matrix=${JSON.stringify({ include })}\n`);
+          fs.appendFileSync(process.env.GITHUB_OUTPUT, `album_count=${include.length}\n`);
+          fs.appendFileSync(process.env.GITHUB_OUTPUT, `selected_groups=${groups.map((g) => g.id).join(",")}\n`);
+          console.log(`PUBLIC_NEXT_MATRIX_OK groups=${groups.length} albums=${include.length}`);
+          NODE
+
+  process:
+    needs: resolve
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    strategy:
+      fail-fast: false
+      max-parallel: 10
+      matrix: ${{ fromJSON(needs.resolve.outputs.matrix) }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install Playwright
+        run: |
+          npm install --no-save --package-lock=false playwright@latest
+          npx playwright install --with-deps chromium
+      - name: Process public album
+        env:
+          GROUP_ID: ${{ matrix.groupId }}
+          GROUP_NAME: ${{ matrix.groupName }}
+          COMPETITION: ${{ matrix.competition }}
+          LEAGUE: ${{ matrix.league }}
+          TEAM: ${{ matrix.team }}
+          ALBUM_URL: ${{ matrix.url }}
+          ARTIFACT_KEY: ${{ matrix.key }}
+        run: |
+          set -euo pipefail
+          mkdir -p ".artifacts/$ARTIFACT_KEY"
+          node scripts/process-album.mjs \
+            --group-id "$GROUP_ID" \
+            --group-name "$GROUP_NAME" \
+            --competition "$COMPETITION" \
+            --league "$LEAGUE" \
+            --team "$TEAM" \
+            --url "$ALBUM_URL" \
+            --output ".artifacts/$ARTIFACT_KEY/plan.json"
+      - name: Audit plan
+        env:
+          ARTIFACT_KEY: ${{ matrix.key }}
+          TEAM: ${{ matrix.team }}
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from "node:fs";
+          const p = JSON.parse(fs.readFileSync(`.artifacts/${process.env.ARTIFACT_KEY}/plan.json`, "utf8"));
+          const products = p.products || [];
+          const variants = products.reduce((s, x) => s + (x.variants?.length || 0), 0);
+          const images = products.reduce((s, x) => s + (x.variants || []).reduce((q, v) => q + (v.images?.length || 0), 0), 0);
+          if (!products.length || !variants || !images) throw new Error(`${process.env.TEAM}: plano incompleto.`);
+          console.log(`PUBLIC_NEXT_PLAN_OK team=${process.env.TEAM} products=${products.length} variants=${variants} images=${images}`);
+          NODE
+      - uses: actions/upload-artifact@v4
+        with:
+          name: next-plan-${{ matrix.key }}
+          retention-days: 14
+          if-no-files-found: error
+          path: .artifacts/${{ matrix.key }}/plan.json
+
+  merge:
+    needs: [resolve, process]
+    if: needs.process.result == 'success'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: next-plan-*
+          path: .artifacts/downloaded
+          merge-multiple: false
+      - name: Merge and audit remaining groups
+        env:
+          EXPECTED_ALBUMS: ${{ needs.resolve.outputs.album_count }}
+          SELECTED_GROUPS: ${{ needs.resolve.outputs.selected_groups }}
+        run: |
+          node scripts/merge-plans.mjs .artifacts/downloaded .artifacts/merged-next-plan.json
+          node --input-type=module <<'NODE'
+          import fs from "node:fs";
+          const p = JSON.parse(fs.readFileSync(".artifacts/merged-next-plan.json", "utf8"));
+          if (p.summary?.albums !== Number(process.env.EXPECTED_ALBUMS)) {
+            throw new Error(`Esperados ${process.env.EXPECTED_ALBUMS} álbuns; consolidados ${p.summary?.albums}.`);
+          }
+          const groups = new Set((p.albums || []).map((x) => x.group));
+          for (const id of String(process.env.SELECTED_GROUPS).split(",")) {
+            if (!groups.has(id)) throw new Error(`Grupo ausente: ${id}`);
+          }
+          console.log(`PUBLIC_NEXT_MERGE_OK albums=${p.summary.albums} products=${p.summary.products} variants=${p.summary.variants} images=${p.summary.images}`);
+          NODE
+      - uses: actions/upload-artifact@v4
+        with:
+          name: merged-next-catalog-plans-${{ github.run_id }}
+          retention-days: 30
+          if-no-files-found: error
+          path: .artifacts/merged-next-plan.json

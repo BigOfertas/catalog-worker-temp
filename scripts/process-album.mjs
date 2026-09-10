@@ -43,7 +43,7 @@ function parseArgs() {
 function isMediaUrl(raw){try{const u=new URL(raw);return u.protocol==="https:"&&MEDIA_HOST_RE.test(u.hostname)}catch{return false}}
 function mediaKey(raw){if(!isMediaUrl(raw))return null;const u=new URL(raw);const p=u.pathname.replace(/=w\d+(?:-h\d+)?[^/?#]*/i,"").replace(/=s\d+[^/?#]*/i,"");return `${u.hostname.toLowerCase()}${p}`}
 function highQualityUrl(raw,size=4096){if(!isMediaUrl(raw))return raw;const u=new URL(raw);const p=u.pathname.replace(/=w\d+(?:-h\d+)?[^/?#]*/i,"").replace(/=s\d+[^/?#]*/i,"");u.pathname=`${p}=w${size}-h${size}-s-no-gm`;return u.toString()}
-function looksLikeTitle(raw){const t=clean(raw);return t.length>=5&&t.length<=180&&TITLE_RE.test(t)&&(/\b\d{2}\s*\/\s*\d{2}\b/.test(t)||t===t.toUpperCase())}
+function looksLikeTitle(raw){const t=clean(raw);return t.length>=5&&t.length<=180&&TITLE_RE.test(t)}
 function classifyType(title){const u=norm(title);if(/CORTA[ -]?VENTO|WINDBREAKER|JAQUETA|CASACO|AGASALHO/.test(u))return"corta-vento";if(/\bSHORTS?\b|\bCALCAO\b/.test(u))return"shorts";if(/\bTREINO\b/.test(u))return"treino";if(/\bVIAGEM\b/.test(u))return"viagem";if(/\bCONJUNTO\b/.test(u))return"conjunto";if(/\bKIT\b/.test(u))return"kit";if(/\bREGATA\b/.test(u))return"regata";if(/\bCAMISA\b/.test(u))return"camisa";return"outro"}
 function audience(title){const u=norm(title);if(/FEMININ[AO]/.test(u))return"feminino";if(/KIDS?|INFANTIL|INFATIL/.test(u))return"infantil";return"adulto"}
 function commercialType(title,type,aud){const u=norm(title);if(aud==="infantil"||type==="kit"||type==="conjunto")return"infantil";if(aud==="feminino")return"feminino";if(/\b(PLAYER|JOGADOR)\b/.test(u))return"jogador";return"torcedor"}

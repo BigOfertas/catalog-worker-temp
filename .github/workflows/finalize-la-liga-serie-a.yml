@@ -1,0 +1,62 @@
+name: Finalize La Liga and Serie A Production
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/finalize-la-liga-serie-a.yml"
+      - "scripts/finalize-la-liga-serie-a.mjs"
+      - "scripts/verify-finalized-public.mjs"
+      - "published/merged-plan.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: finalize-la-liga-serie-a-production
+  cancel-in-progress: false
+
+jobs:
+  finalize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      SUPABASE_PROJECT_ID: hootwcacnrtidfmqsvrn
+      SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Validate production secret and scripts
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "$SUPABASE_ACCESS_TOKEN" || { echo "SUPABASE_ACCESS_TOKEN ausente" >&2; exit 1; }
+          node --check scripts/finalize-la-liga-serie-a.mjs
+          node --check scripts/verify-finalized-public.mjs
+          test -s published/merged-plan.json
+          echo "FINALIZER_INPUT_OK"
+
+      - name: Reconcile, publish and verify Supabase
+        run: node scripts/finalize-la-liga-serie-a.mjs
+
+      - name: Install Playwright for storefront verification
+        run: |
+          npm install --no-save --package-lock=false playwright@latest
+          npx playwright install --with-deps chromium
+
+      - name: Verify finalized products on bigofertas.net
+        run: node scripts/verify-finalized-public.mjs
+
+      - name: Upload final evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: la-liga-serie-a-production-${{ github.run_id }}
+          retention-days: 30
+          if-no-files-found: warn
+          path: .artifacts/finalize/

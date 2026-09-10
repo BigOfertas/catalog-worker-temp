@@ -1,0 +1,67 @@
+{
+  "enabled": true,
+  "request_id": "catalog-worker-initial-2026-09-10",
+  "source": "BIGofertas - Catálogo Digital (1).pdf",
+  "notes": [
+    "Worker público temporário: somente álbuns públicos e metadados de catálogo.",
+    "Sem credenciais e sem acesso direto ao banco de produção."
+  ],
+  "groups": [
+    {
+      "id": "la-liga",
+      "name": "La Liga",
+      "page": 4,
+      "competition": "La Liga",
+      "league": "La Liga",
+      "mode": "club",
+      "albums": [
+        {"name":"Atlético de Madrid","url":"https://photos.google.com/share/AF1QipNODIBBPHYu4AcupkDdJLZOnsbEmZg-D8SNbOHb7PFSHxtMpuOvxx3vIaBt3HLwSg?key=cjJySVMwekdEYW5CNktMcmFxQ0JKZXVVYmZoMUtR"},
+        {"name":"Athletic Bilbao","url":"https://photos.google.com/share/AF1QipMB4WjYA155wo0HBJMuZ6gxGWdFb1WriH-2lNCrA8MQ5YwOPVx9ycnOZgjwAHdKjg?key=dUlhMW5yZ3pmZjM1U20tS096d25ZTHJuZ29mdjRn"},
+        {"name":"Alavés","url":"https://photos.google.com/share/AF1QipNR1M3ybxm58hlFzIw0V6W4xXbBG_eWzIJlOWJvS9qMxhR3R6qYLLudzDyx28yfWg?key=QmdZRGRjT0JKWVBQMTlEQ3FwalV2b0pRY3VBWFlR"},
+        {"name":"Barcelona","url":"https://photos.google.com/share/AF1QipNW-C2FKNeUvte3aOeyqNgfY3lzocQ_szumw8qt4UopzzW8Rb7xLLN_dY9b_IVN1g?key=SFEwS2FCM2VyS3NQc2hJRTFMeVpuTUJ3WE1qdTJn"},
+        {"name":"Celta de Vigo","url":"https://photos.google.com/share/AF1QipMoNu-ZTk7dGGwDc4Z-rUYyOCZYvY1bcXjruiuOMRlxCaj0xQyQPnh4jIGJxnggRQ?key=bDV1RS02MlpaNTNjay1Va25jeHRlWjhlOUl0UXRB"},
+        {"name":"Córdoba","url":"https://photos.google.com/share/AF1QipOMFkAO5tOguFpYJvQQa7r8Axp475T-2DlVQVLxHUrEigwuYzzAefSIgbR59DX63w?key=VDRVb1oxYl9iN24xWkRXRkI2WVFzMERadGxiU0pn"},
+        {"name":"Cádiz","url":"https://photos.google.com/share/AF1QipMUFZkVyi-aiB2LA83h08ucRCstPWwt9AU-2zPHoWsw71_-2Y4454SIZ11C5jyOcw?key=NTJjQkhQSHM4T0JuU1p1VDJWTnVCOGZOSFNZTWZn"},
+        {"name":"Espanyol","url":"https://photos.google.com/share/AF1QipOmqG8YKZF3ABuvaB6iE693ZjIGkbs-3h8Xa91ypiuDjTOQo42a9jCBAz9CHOTOog?key=RVhWaS10LWJ0amYyYUN4V3VEczNhSFU2ZTl4cU1R"},
+        {"name":"Girona","url":"https://photos.google.com/share/AF1QipP5cUATXwhleGOCJ6d1WL_Ak534WDji5aCwFPBKVeQUpNjFtzgtONyM3fJXplCoQQ?key=dmZNeHZ3Qjhzc0NmU1RsWEtFQXJxdi1JbWc1TlJn"},
+        {"name":"Granada","url":"https://photos.google.com/share/AF1QipMFIG0NH3YjtbQ2W2rqHGyXzl3dxaQsOCWd9vETP9muXSCBobyLGZQHQHxlY7sPhA?key=djZBWlVSamN4VW1HVUowWWFvOUtwZlo3TE5MZ1NB"},
+        {"name":"Las Palmas","url":"https://photos.google.com/share/AF1QipM8C0Kvr91T6XzRsxvcCZJ7jvIq_ku4r7ifKB_CfwAjnPdWGx7AD7mGwDR6kI_HAw?key=dDlJTmhBQ0dlSVFwNDFCZ1NlbVlkUTY1R1NSOXB3"},
+        {"name":"Málaga","url":"https://photos.google.com/share/AF1QipNII2jImL94dv3_bBz5lMKdejynPoOym0mpq9484zmECqS8GI0LjDeXZg2YVNQqYQ?key=d2hfd3V5eWZMODRVamZidWhyWDNKZEZlYWUxRVVB"},
+        {"name":"Osasuna","url":"https://photos.google.com/share/AF1QipOzDQBPGbcEZOg54isEBQrRZ9ahzYiRQsxcCW6Z5cR-kwlwsq_Jetl2JJA5iQDk0Q?key=eHFWc05wcmNzdFc5LTk3RFVSeFRCSEJDZ2JfN3p3"},
+        {"name":"Rayo Vallecano","url":"https://photos.google.com/share/AF1QipMgT-Q_0CGazAIzWcpI3zDVxMw-zTlBRdWGhUAd3KSUuSaS3aU0gNjqewlYeTNNDg?key=YjNrVE1EYktPdGtBaHQ3Ql9ScWxacjBSNldQeG1n"},
+        {"name":"Real Madrid","url":"https://photos.google.com/share/AF1QipMLtL6gcpPcNVrQ9hmio2lqOB_HiYFVnrFhBG5NHP5JU1ApuiiQcCjHNUG1OLwUJw?key=OTBkNnBsSEZHV3Y5TXQxZE9EY2plYzdHd3JqSmZR"},
+        {"name":"Real Sociedad","url":"https://photos.google.com/share/AF1QipMwPtKLuCweE_7PZnGTFOSJAPObGj9dcXieTXxaZr2LzlnfSnY-mwTDCsxPRR2bOg?key=VzhKR09FdzF1ZGtZSWJieXlpaTgwWEFxNWFvR19n"},
+        {"name":"Real Betis","url":"https://photos.google.com/share/AF1QipNcn-mf2pVZ6bX2brQfjWJCd02H1jtFuQZtw0nWvgTbNAOt-7LfzPbwMJuK_f4dCg?key=Ml9HQVVjOFBlM3RlcVRUY3F5d3RDeEZTM0ROZ3FB"},
+        {"name":"Real Oviedo","url":"https://photos.google.com/share/AF1QipMn9eU9UHDZVjAel_5sLijltMLLkO6DM-dmLOKGAgsON0IqdvQRk7QA-fp3Ooszsg?key=ZDlIcWgwSThWZkljODBQVTI2RUZqN3Uzd3VsVFBB"},
+        {"name":"Deportivo La Coruña","url":"https://photos.google.com/share/AF1QipOSdbFOk2ndJpNa-Dij8o-HS39XXCY1MXZI-N0MbhGmsNXWYsCT-y2j3lLhJzV5Xg?key=d2RxZERIQkkzdTNfRzRaQlMyMHM1R3B0ZWppazl3"},
+        {"name":"Sevilla","url":"https://photos.google.com/share/AF1QipNrhsWjk7ovZa_xaEGXrSuTwMJfRRjuAnpR0TEajx_E5MYQsCK6kDcAvbxjU9Hgog?key=OXQwN2dfLVpSb1pqOVRrVHhJUGZqTkJrc2xhSmtn"},
+        {"name":"Sporting Gijón","url":"https://photos.google.com/share/AF1QipN3__9L0T03s0_P4dSQ1xnsT7NnhxREgcvchIh7GwOi7m1qPGx5CAdMu73EFlSGXw?key=ZzB5OVVSWHVnWS1PZzZzNnBsRVRiVUZtb05vbkd3"},
+        {"name":"Valencia","url":"https://photos.google.com/share/AF1QipOYgrNtOySQfunF2b-4GjJcc-2rKtFE-m9UleYeXGTbJgSxyKnP4gjxvOVz-fSu0A?key=cUQxa3NWOTQxM2hBczlYcENFem1TQXE1N25JYWx3"},
+        {"name":"Villarreal","url":"https://photos.google.com/share/AF1QipOZArCymQVo8Qhusjy7HylfN58u-QHIPii8n3QcZ8wxdeJKX7ayyxUO7ytbbc-5CA?key=QWQwblllU3IxUkh6ellXNGFtRmJJdHhYNjZrQjl3"},
+        {"name":"Valladolid","url":"https://photos.google.com/share/AF1QipNekQDOhe4IRbg13QozMJtwuUTqYSWwFGq_tBhNj-1-MZ4ttUl6FqcwVmKfSm8xAA?key=aHNNWEhkTE8yMmdwV3c5R001aHNYd3htYlpOWGxB"}
+      ]
+    },
+    {
+      "id": "serie-a",
+      "name": "Serie A",
+      "page": 4,
+      "competition": "Serie A",
+      "league": "Serie A",
+      "mode": "club",
+      "albums": [
+        {"name":"Atalanta","url":"https://photos.google.com/share/AF1QipPIOeLwDmLwAirodWPl6w2XOCpJRXBNTpYZih5m_aaMxzAUWqw_O_c8OmQncHkqJw?key=Z2hrVHZEcGxnZ0tYOW13UEdqcnE5bi02ODU2Nmpn"},
+        {"name":"Bologna","url":"https://photos.google.com/share/AF1QipP-M6JoShho5SSTyQWJaRfbbmqqUtqH2HaUMq-RcJMiRNPWdXF_tWrMtqDcyrzfow?key=dzZpcml3WFQxX1l6aThxMjhoYXVFdjNhOTI5RGdn"},
+        {"name":"Fiorentina","url":"https://photos.google.com/share/AF1QipNqhot4NUb6O90S0IhlMwGIIs2Bl9AN_qJPeH2TWs1WiPSTfrmdn2oZ0db53djwEA?key=N2lzb2dJZTVaMlhneDA4eHF6VmxQdGZ3Yy1yMWlR"},
+        {"name":"Inter de Milão","url":"https://photos.google.com/share/AF1QipPcOgOCLw6LdbTFQaoHVVA7I7ZtrGSQaTmEp6r1zvD4_C3KSlvTiNsPBf8c1x7eCQ?key=UXhZSW00U1VwcUtjOVU1T2ZMenp6NmZyMlRxTkZB"},
+        {"name":"Juventus","url":"https://photos.google.com/share/AF1QipOU5LpjnOTIIIZnhp7kvLWOy2uqepxM8edrN5dn2fj7QNcYOwSCyiMgItnqiesUug?key=dzdBSURMMmhySEN4Z0U5VUNoYmJWa2s1M2psU1VB"},
+        {"name":"Lazio","url":"https://photos.google.com/share/AF1QipPArpyryO9UUgpCFhZRu4sh3iGsxiwzvRxmXHzbEc8IUsmsFYEBqRfVQqbiTs7Tdw?key=dVd4ZlN1NzJHTGpKbFpvZ3hXOHFBYzZfeFo1QkVn"},
+        {"name":"Milan","url":"https://photos.google.com/share/AF1QipNB6xQ0isqog5KzOZqwHW6f3dEtSL_5IJw7EPkyIcHJV9nfkiYRO1PFJwHo9KPfag?key=WGFZUmpJVlZUVkxlTlFzNWo5OXpjOWxyN2hqT2FR"},
+        {"name":"Napoli","url":"https://photos.google.com/share/AF1QipMknsQEdALDZVR79ZCKWJj265P9u46wKhMjCKUjMGIsXU3ZqLYrPob93tkoOSmhPg?key=WFpzMWFpem45bWlMMThINXRvSlQ1bjZjQ2tlMDVn"},
+        {"name":"Parma","url":"https://photos.google.com/share/AF1QipMRIogdKspMdQ_s0AGHSu5kJN7jaBMHFgfWibJ5ajWVvodoFur421tgFaZ_teIU6w?key=X0ExMF9tZkd0R21xdHRSUTREV2lpWkVwak10UHZ3"},
+        {"name":"Roma","url":"https://photos.google.com/share/AF1QipPRKeXPv7rN-xXfgLM0HR2DcvYD_XPe9r0Fw87gutomp-v-EYbjvKYfrFt8VQgs2g?key=OUtybURjazIzRkhnaW1tZ3YwdVNVaUpnUjlwZDNn"},
+        {"name":"Torino","url":"https://photos.google.com/share/AF1QipMammMthmhQoo6u6Ix6W_BawmA_2MfpqRYIqkkl-TSHG4c59fntSEMSLRaHJmr3Ag?key=MGNHUlhNMUxCc3d4ZU5QSmRYcEdVMjAxX3Q0d09R"},
+        {"name":"Venezia","url":"https://photos.google.com/share/AF1QipNdulnId9bAl7fw7eJPR5pTDKcnLnqUQj-e3sjfXDI0EjmNUqlunZ-KSHaSQszCmA?key=Zy1sS2pncHhJbGFPd2RCaTJWTVpmVjN1ek5zRGRB"}
+      ]
+    }
+  ]
+}

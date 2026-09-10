@@ -1,0 +1,139 @@
+{
+  "enabled": true,
+  "request_id": "catalog-worker-next-2026-09-10",
+  "source": "BIGofertas - Catálogo Digital (1).pdf",
+  "notes": [
+    "Worker público temporário: somente álbuns públicos e metadados de catálogo.",
+    "Sem credenciais e sem acesso direto ao banco de produção."
+  ],
+  "groups": [
+    {
+      "id": "premier-league",
+      "name": "Premier League",
+      "page": 3,
+      "competition": "Premier League",
+      "league": "Premier League",
+      "mode": "club",
+      "albums": [
+        {"name":"Arsenal","url":"https://photos.google.com/share/AF1QipNA5WdAYW81k2D7jD9MaFAfpG5lrHQzFvrOdQwZGUFruP94QIc_nzu64IkNCcwMCQ?key=X0lEVU9UMWRKZHpmaklYN1lxcFl6aTlnbUZKQjNB"},
+        {"name":"Aston Villa","url":"https://photos.google.com/share/AF1QipMFHcEsZTGzzQW9W4mpHqFqubNiAX30JKXwh7GT1UNPNRppM4Guz3hh1TOA1a-FsQ?key=LVRCanE0d1JTUG1ldDM5QUZEakZ6cWw5aUxtRFNR"},
+        {"name":"Brentford","url":"https://photos.google.com/share/AF1QipNe-2u3euO9b1qMwz25ec0tJeB962lvra8bs4-pC1skocDeelz9MUlPD-qsFGqvWQ?key=TE4ydXpvNWJkTThrRzRwWURHTTNDa0lGcVB6RU1R"},
+        {"name":"Brighton","url":"https://photos.google.com/share/AF1QipNRk0SKSlC6Wa2aJBPhYjm77tdN8q1ZSToiMBMyhmNDouG-xv1jfwaxIpqWHuYcAg?key=WmRRcG83eUlhZGNpaWgtS2FQWk93ZU14YVBrVzZn"},
+        {"name":"Chelsea","url":"https://photos.google.com/share/AF1QipOGmgi_n8vehWIf-8a2onuAwE_0aGsV1WziWRWOydX9lji5KqrK7Mk8rC9rGbS3qQ?key=N0xBLTVhcW1zcUhFa2c3REFjZHZFRGNQRkctZGFn"},
+        {"name":"Crystal Palace","url":"https://photos.google.com/share/AF1QipPxoOihRSoznk3FlXvnckE186fDsALIwto3e9T-5Q_5o6PHX5MfPZL_MOK-MXAIRQ?key=TUl0anJZS1NGNVVFX1BQblFlcGk5TmdPS2ZldmZn"},
+        {"name":"Everton","url":"https://photos.google.com/share/AF1QipNCHKdyey9_hrfPF2Mdm7dybP35sw3BeBKtfYK5hhMA2EDad0k0pPgacil3-SZ1fg?key=dWw4aU5uc2pSVkhCaFhKclpzVXFfblE2NG1nVkZn"},
+        {"name":"Fulham","url":"https://photos.google.com/share/AF1QipNljoR-r_eLNvKeuOEOjYZU12JhkjXiY0UbcsBv2VVg6Idr4e3_gUsW4YH6Da04Iw?key=OHctaHExYlFBWkVjSGNhMHdvNklfcHJPcTY0S0dB"},
+        {"name":"Liverpool","url":"https://photos.google.com/share/AF1QipPVigk2XaUKDjq5IfTtYm5Ei2CR40l3jhM1LOwmUK7Tov2RZyugrhBhdlF9cDNEAQ?key=NFRINDRyQXVXcnh6QUlwYnJjVGFQVjRVUnhMWUdR"},
+        {"name":"Leicester City","url":"https://photos.google.com/share/AF1QipMYoGo9PDcr1lpWbotddIgDhYYvPbYf1TK34v3IcS0qlC7ApI4khQqkA-HeuQhKkA?key=Ujh3WVpvY3BiMldselJZS0tmT1JXRWtOcEp0SHhn"},
+        {"name":"Leeds United","url":"https://photos.google.com/share/AF1QipNUWu5KKTiVSv-MRdQlbnfOl6NVsOmbTq9meRfaRK8D3E7wLRpyQ1URz38D4nmpEw?key=dXMzRFpvTXd6b18wOXNzSUt3QTJEaktMQ2xCYzl3"},
+        {"name":"Manchester United","url":"https://photos.google.com/share/AF1QipNM906W-cCMPqEdJDZkrGoX5AnQuptf5NZC6p4KCPb81DyRb6JzPeFAXIoXo_VMHA?key=UDVQWmprbXJEc0ZHeXoyYW5lV09RQzB1MTgzVUV3"},
+        {"name":"Manchester City","url":"https://photos.google.com/share/AF1QipPlba62iAgSQ8gvNYbx1DIJ0k3e9T94TOg22n4azCBDirUCYt5GxbSM4_a8ZD_rzQ?key=UlRHbUFSTDJjbXh6aGY3d2VhN2p5NW9zWDJpQ0ZB"},
+        {"name":"Newcastle United","url":"https://photos.google.com/share/AF1QipPr09OuZCJxz7sL5D6I6TJ0ru6EwIbyf_cipTaigOqv4N_0iNLIH1PSsU_M89kTNQ?key=cGlFS2IwR0FCTVJXMkl0YUphS2FwREZnSzl1dWtR"},
+        {"name":"Southampton","url":"https://photos.google.com/share/AF1QipNJE1oT2i_prw1n09e8bkN946R7Fe-byXAvUDJ6u-OixKCN0tsLfOaP_3Ac51WDSg?key=V0xGMU9BNU9wUUtQcDdDSVlWLUpwN29oSWVzQ1Rn"},
+        {"name":"Tottenham Hotspur","url":"https://photos.google.com/share/AF1QipM_6fg55gHrL2IZdI9HkXV0go4AIOwBTPTMz3YVHT5FMNME2e7aafn6wR73P9NrYQ?key=TnZyUVRZMkFQbmxwUFRPeVZMU1Y3OTlzTEYxU013"},
+        {"name":"Wolverhampton","url":"https://photos.google.com/share/AF1QipMhqDOizAUmNN9Vrx85SDgLvc5v0euP8FfEWk2WBTCHpNKD3pCx0enmFixx5n9U2w?key=aTZrd3J5YTFMUHMxZ2IxOXFwTTNodkFhczhPOVVB"},
+        {"name":"West Ham United","url":"https://photos.google.com/share/AF1QipPm_MA1wzqak1cj81YkpJVDQR7Wz-PnxUtsQkbGI7zWKoJEhMdoO7b95JfGwxBoNw?key=NnZqQUtxQmhuTEVOb2xJaklUVHphQ2JlZG9Gc1V3"}
+      ]
+    },
+    {
+      "id": "bundesliga",
+      "name": "Bundesliga",
+      "page": 5,
+      "competition": "Bundesliga",
+      "league": "Bundesliga",
+      "mode": "club",
+      "albums": [
+        {"name":"Bayern de Munique","url":"https://photos.google.com/share/AF1QipOYgZHMXVhJpVN0cJ1t5bAgGFmbxHBTdUPTZ-9B1cHKJbeMM8XBOSZvW1k27aSKrQ?key=eS0tSnA1N2Yzblp1d2dPaUpfV2RlNjBRWWtQQXhB"},
+        {"name":"Borussia Dortmund","url":"https://photos.google.com/share/AF1QipN7UWIz6qTMunT1YlxD7JDGWiSa65iPQZ5GHNTlzh6hOW6auI09UEw7JPPkR_nyYQ?key=cE1GcGdZLVdIYUc0aWQtaEZfeEpjbmtKenFkZURR"},
+        {"name":"Borussia Mönchengladbach","url":"https://photos.google.com/share/AF1QipM_yujVtMbi4PMq5C7scmn7Zvk5g4x3GHjygmDbBHGcxOJyH0B8LHtfnTOwHIylTQ?key=RVFHR2U2dENlbi0wVUdBWENwSUxjUENjX1dSNGln"},
+        {"name":"Werder Bremen","url":"https://photos.google.com/share/AF1QipMB2A6dsd_N40waR_h4Kx2y1aaaf2wfBK_PgFg-txytUi4wQZt0HNpFvOzosLS5fw?key=dUM3NXVZbFg4Q2w5NmcwRGhwUmdXSW41d0tUc3ZR"},
+        {"name":"Bochum","url":"https://photos.google.com/share/AF1QipNl52pBoQkihcGTy15Gqr2gZtiFzImmRRIKjV88mW6lRGgPqHlz_3rdNBvm-Nllmg?key=LVhLRlBvX080LTlPLVZ5N3VnMEFuTTEtVDk2TWpB"},
+        {"name":"Eintracht Frankfurt","url":"https://photos.google.com/share/AF1QipOPgQUkdIMOV1Yu8rQnsq3iE7BXQu4MqQNPUpBCJYusCgaAYZm9fvMxJAfLZQGDfA?key=c0s0N3FYT3RESklJc3F4SkFGR0ZfRHRFZ2tZdFFn"},
+        {"name":"Freiburg","url":"https://photos.google.com/share/AF1QipPW83l7eYP5BM8BC5h8kJCmxo1XnYfkgvax7GlPUOt70_XrJNoW7Sjo0HoRhzHMtA?key=X0kwWGM4MjNyTTJKUUxPaFU0VWVldEtRbVR1Vk5n"},
+        {"name":"Hertha Berlin","url":"https://photos.google.com/share/AF1QipOnjBCTJ0e9SfLC4okNUXbGVE7ifRvX3chXiwZRo-Hv2U7XMOi5TEo9eY_W72nRlA?key=eWlPRXN5ZUViY25CMTc2NzBWR1dPOTRpYy1COVFn"},
+        {"name":"Hoffenheim","url":"https://photos.google.com/share/AF1QipNxvGK2pqzs6YlcNdLgGkY-jtCIWe_AaL0KJwSxHgj1hp3d3Q4ALIPgYID3Vzr3vw?key=NzhQYnJRdkxWOEdxRVFLZEJJNzU4cVVnQXlOdWxn"},
+        {"name":"Köln","url":"https://photos.google.com/share/AF1QipO3FgHYiy80opmf0AwbjiCKd8keD-Pwvtbln-bOaKhuRYdT5_bvskvefwqnAXSuKg?key=UUtfdTRFcUJVMUFBSWdNc0MzZ25FRWVxdjFVT3dR"},
+        {"name":"RB Leipzig","url":"https://photos.google.com/share/AF1QipNLgpe8kIIR3wPJcFIYzVTFAmndNrm4TmFBtMAuHufM2vYdwpwBexAulzQno01PGQ?key=bzdYdlZFc0JDTFpKaHhlMER2OU4zUjNNcU95bEhB"},
+        {"name":"Bayer Leverkusen","url":"https://photos.google.com/share/AF1QipOMjLsKMFfFQ6ynyFobOeFQp6YMyNADgSmdko4oiSCg0R38NUbIP5df3d5hkrFs1A?key=NkZ5aUJwRlFlMzlibzd4RUdiNlhZeVVPRkNpZUxn"},
+        {"name":"Mainz","url":"https://photos.google.com/share/AF1QipPuhWdpp6-3knWu7ZmAB9CtUZYhl06FRcVBwMeGFbAGuwezqqy9e0A0daCDnUpnMQ?key=NTBsQ19hSVlWRWk4dVBPaVNRc0UwNE01Yi14RGZ3"},
+        {"name":"Schalke 04","url":"https://photos.google.com/share/AF1QipOh9vX6KH4aupELTmL1b9r2VM5q7ZPzFErCgOXAeT_FboFxbeag-H0fSFE-9EiZfA?key=VHdTZk5oc0RUZXRHZzJ4ZVpESWYzYU1Oa0hWUThB"},
+        {"name":"St. Pauli","url":"https://photos.google.com/share/AF1QipPvjDRAMo_1yH05SqUApjNhUesWaOBfplRsFfQhqLjMV10kNq9D3DYcqGRqTWQmRw?key=QzZYSXVJVTRGNzlfT09BU09LWXhKeFptMGV2M3FR"},
+        {"name":"Stuttgart","url":"https://photos.google.com/share/AF1QipMvQqBp-9ITJRSm2PyPTdp3S4A1QcQtDxRO5Etjw4INA3zlnUdn577_iY_Tz2O68A?key=aW1MMVl0YVVXWFVWSHZnQXljUHMwa1l6MkMwVGZB"},
+        {"name":"Union Berlin","url":"https://photos.google.com/share/AF1QipNCpyw9mbfpL6HEvjReb0mFbCHmG5viDk_wtPHUEeYbJuL0piCNQGsNLcOP2EJ2JA?key=TTNndGhmdkp1bUFvZjJyTkYzSmRhYlM0bU9tM0h3"},
+        {"name":"Wolfsburg","url":"https://photos.google.com/share/AF1QipPEI9oQhcwuv5WbF_Gx6EoNVqMOa1932Xo6ataODeXoNY9cOdaGdeoKJ_jVwqQ6mg?key=X3NiOVBpVmZSSnZqNi1HX3VmbDZKbzV3OFFLcGxn"}
+      ]
+    },
+    {
+      "id": "ligue-1",
+      "name": "Ligue 1",
+      "page": 5,
+      "competition": "Ligue 1",
+      "league": "Ligue 1",
+      "mode": "club",
+      "albums": [
+        {"name":"Brest","url":"https://photos.google.com/share/AF1QipO9kN6EdNmIySawtTeEAKERGew7bQ9BfLlJEEnMmsMOazU04xlD8CemE6VI8pSYkA?key=SXdfc3pfUGR1T3NTazJQR1VTTDBLUFFCS0Z0akt3"},
+        {"name":"Lens","url":"https://photos.google.com/share/AF1QipO7NU3w7uMbaA0sPrgZ9kNowiMdnP3dKtaPXhpdd_h1S0p9syz3yC_aOhazCg9cJA?key=WndUWmVvVENOLWlDeEhoQlhoVFZJbmw4ZVc2OENR"},
+        {"name":"Lille","url":"https://photos.google.com/share/AF1QipOgRGWwDnjKQE8NvJFSlfBW5-zDf-sSjj6s46AdfjsTqvBFPf2aiLLQR4MsC0LQWA?key=REctbDFKMVQ4S1VwX0dteDhxMU5RYmdLRlNwdkRn"},
+        {"name":"Lyon","url":"https://photos.google.com/share/AF1QipM9Jx3wsmiXDclOHDvCVrWGlxxsn8orJMqQM90H9BWAlmqlutEYhEkaHX98mrRpCQ?key=TVNydHlZM29pS2E4TGpNOGljYU1TalRxaDg4TTJB"},
+        {"name":"Marseille","url":"https://photos.google.com/share/AF1QipNJL3ysUMYyvCGJFDHc43tiLJc5IxlGaqckgrpg5knWYMSxUf1ZuhCwgP2OFAWFdQ?key=ZW9QS1dqSnZscnJUV2NacDZUcHZpMUxfLVlqY1B3"},
+        {"name":"Monaco","url":"https://photos.google.com/share/AF1QipOvFfkzQACn1_z3rLt6i_aildQf1JY1xeSr0mhLYvr3yY6b7W3_WtbvEC_yAwY0gA?key=RUxiMnpfNy10Y2NSWldSVlZHNmNmY0Q3Tnp4NEtR"},
+        {"name":"Montpellier","url":"https://photos.google.com/share/AF1QipNEkYfZKFdUQWco2xXG8wA0zT4vmJwgfcd9Je94OwbiNmSvOAhfrF0nEo0FRDZTKQ?key=ajAtTmNxcWxvRUJxWHVSMjZqZUZWekFzeW1KNGJn"},
+        {"name":"Nantes","url":"https://photos.google.com/share/AF1QipN7K91SZV1XRP4L9DYvkJtHJzAlw2n034YtF6Byze89CA3swXpp4WEZwxKj6lYQ8A?key=V281Wk82LUJuNmVlZ0V5MC0waTNyVkMzY1pnSF9R"},
+        {"name":"Nice","url":"https://photos.google.com/share/AF1QipMqeWhWxa2D69Hr32Z3hxSPk3Tn4qorVjtufvP2Cba2YFXojNQtL4enOmpzkHcSwA?key=UVFDaWp0SEktQUdQR056d1pWN01KWEs4NHdrSzF3"},
+        {"name":"Paris Saint-Germain","url":"https://photos.google.com/share/AF1QipMXS29nnjCdHRt_OLHhWQGZ6UKnWRMZorFiHYtSe4CfPeKAM8IAPJYXymnqZPjVow?key=LXB4bGR2ZFp1S3A5NTBuUWV6QTdvTkNxNlRDalRR"},
+        {"name":"Reims","url":"https://photos.google.com/share/AF1QipNlE6Zis_Iv0RcyQLcLLFA4GieyVl0lqWC8o76EYBEkgFc6yO70Jh4lcuOUip1vcA?key=dFF2YUU2ckhzektBVjRlcmZxVDBoUWRadWhCNlJn"},
+        {"name":"Rennes","url":"https://photos.google.com/share/AF1QipPlESZLVJSAxEzCJxDr3OQiRbEspUmNKcLrjCjxrM6n3vC3o1o7F_-JtecFS9sCgg?key=eXlvV3JEREtadjZpZXlxUUFrcFNqSGNjZFBpWWJ3"}
+      ]
+    },
+    {
+      "id": "mls",
+      "name": "MLS Soccer",
+      "page": 5,
+      "competition": "MLS",
+      "league": "MLS",
+      "mode": "club",
+      "albums": [
+        {"name":"Atlanta United","url":"https://photos.google.com/share/AF1QipPtw0qtu0qRevW2F2CtKvTrqhNHHh1s3uxvlct1AD1e6EU62EAF7PPEygt7tuWFBQ?key=U0hTOWJPeFJWZEZDM05BZ3J4MEVuR0J3N0JEU2dR"},
+        {"name":"Austin FC","url":"https://photos.google.com/share/AF1QipMon5xmT3yE6RGtWWk-U74i1qaPbUXQxEWHtmuy_zGTSqXztdlK_MuxPpdReb0Bkg?key=d3NpR0Z2dld2emVXQWdFVWtVWEE0NjV1Wk5PZG1n"},
+        {"name":"Columbus Crew","url":"https://photos.google.com/share/AF1QipMLA0uZmL2nz9XGNey9Vc_EIQFFchMaNFdf9J6cR_XnkIoHCuu7KjL9XJBCXvrUww?key=ZVN0cmZaR3N4Ym9aUktucWpBeV8wOGdvdmY2QzFB"},
+        {"name":"FC Cincinnati","url":"https://photos.google.com/share/AF1QipP0x-3QRK0leP07Ox4ZPgnhvT41EScWK_ozuxapCwXUOyRfeJMeJHdqWL-ogrF9NQ?key=NzBjSFU3MnFBZWNjdFMwblFiVHVjcFBXY2dEMnR3"},
+        {"name":"Inter Miami","url":"https://photos.google.com/share/AF1QipNnWWbUrbN1KD8v_NJ50evR3SYXLwNSZPQobFaJ9lm-8C1mCH4sXgdtPJLn-hnOeA?key=WXU5SHA1SFVxVXZpQ2NSY3B6R3hZNjYyTFE3TGJB"},
+        {"name":"LA Galaxy","url":"https://photos.google.com/share/AF1QipOuWDefYqVWk2JQ195rnwdYzCduTMMsdDi09pwnfE-I27rHSgEoGDo7HtMOZgf07A?key=WnNDZk1iMFFjMHh1UUZ4QVdEOV9qUW1uYm1iVVJ3"},
+        {"name":"Los Angeles FC","url":"https://photos.google.com/share/AF1QipOn-cft8Ucsf4CbDT5s_2ehWNy1AmRHzMSNVoSGHPqpIbIBM9knH_SFBH1X28VcUg?key=eGltZlBfVHBfSHdfLXBwV3ByWXJha3dfdWdpQjhn"},
+        {"name":"St. Louis City","url":"https://photos.google.com/share/AF1QipOsqaDmpsXgpCU4iFiExx45eQwxTIwD3uNdf-p0PlFdrj92kYdNpd3rnqwHpP9uOg?key=U1J4a3czS3VrZkNaRTFwZDhlOVBqbXU4aXp1ekh3"},
+        {"name":"CF Montréal","url":"https://photos.google.com/share/AF1QipO22hLfmxGAM3OmNGQQnwIdz8U7O9NNINJkaQjpj7oyO47GnSLlGqHgFoaBHiedgg?key=cXNlMThsblowaWN5aEVFSlYzZGxoX2JvZGJCZ25B"},
+        {"name":"New York City FC","url":"https://photos.google.com/share/AF1QipPcmF3z4M-CGIKrXEGaysjKuMP6eqm-5wg3tI-MEyUejNOF30RGlMe2NKdjBqn7KQ?key=V184R1BISmpDN0FRV0ZhbEdTMUdTV09uM3ZfMS1n"},
+        {"name":"Orlando City","url":"https://photos.google.com/share/AF1QipNI2WU7FNvteDVv40gVcNg0q72sZqdIhj8RKwAKNWovRTHaufEWAZ5LeUy_SShmYQ?key=UFBfOVdJYWtJQlZMZ21pYVYyQjdoUnNYY3pNTVV3"},
+        {"name":"Philadelphia Union","url":"https://photos.google.com/share/AF1QipOpGmon3M2SvfO-siaXfBUe_usHO_yeLTuEbOpt3XGoHL-XFx5tUoROFHrIkar_6w?key=NGpoY09rMUFfTEhHbEpEaXVnMlgzUW1wUHVJSTFn"}
+      ]
+    },
+    {
+      "id": "outros-times",
+      "name": "Outros Times",
+      "page": 6,
+      "competition": null,
+      "league": "Outros Times",
+      "mode": "club",
+      "albums": [
+        {"name":"Ajax","url":"https://photos.google.com/share/AF1QipOpwqdIYUkQi-FBKebgWkIuI-7evNwfpQg6yEWWKJgulPTW27zO1xmmAg3MQLEEkQ?key=Ym1ScmlGc1VaaWpLV3NMOHpMRzdkajFXa01nRnhn"},
+        {"name":"Al-Hilal","url":"https://photos.google.com/share/AF1QipOSswB2cpaRCVXfW_0oJFKuxr4ePWfGgsmrq5SeL7KxFV-pMxfSkhlmosHt3R6G_w?key=M3ViZHAxbUItVEhibWZ3ZjljNkplUUdldy1HazZR"},
+        {"name":"Al-Nassr","url":"https://photos.google.com/share/AF1QipOam6Vnv0cylzpLOHIu-d-vcDMHL8FARXb4xqMyutbkQJJgDC6fb4Y8fLg1YklGOQ?key=Yktvc3dod1dQRFpXQnd0dmpBSU1BTGhYVlFOUml3"},
+        {"name":"Benfica","url":"https://photos.google.com/share/AF1QipNdsXLTIVGqszwSk5JUW6hOu7XaSx8LRaL3tk2484WLcvbO7_qfXkhtjn-UxrcvTw?key=WlRPLUJYYUxfNG9PU1NIYU1vLWI5dWNtU1F0U25R"},
+        {"name":"Boca Juniors","url":"https://photos.google.com/share/AF1QipNR2CMGVeMX9pc7o7NWpE3hgwtemTLVunWt6ljcUXhAQITA89toB-wN1W8UhzxzPQ?key=ZnM3U0kwdGJJRHMyTXBNODNBU2FoU2UzUk1yX1pB"},
+        {"name":"Braga","url":"https://photos.google.com/share/AF1QipN7hte1Ga5qhL183__aHQ7TPbo6hoKm12ykCoL0b8h2or7mh2Kga9F9Cexr4QHMIg?key=ejZ1czU5NFJfVHRVQ1VMdDc2OEVHOHBCS3hkV2xn"},
+        {"name":"Celtic","url":"https://photos.google.com/share/AF1QipMy-pjse3p1S_chO1UdJAtu15xBv5HbyKneKaaXRHjc2UfyqPFzW8NUlIDGQE8x8A?key=Vk5kVWxXeFVQNFJadE91clBiZGpDdDF3aWE2VDhR"},
+        {"name":"Club América","url":"https://photos.google.com/share/AF1QipNaOEkGTlR1B-etasssIS0ErBhEF6oYJdEZQxhcHFyHZ_UHAd_Gd5TdVIMnlKQUnA?key=RFUtS1djRjFDdUcwVmwwNWM1Y0ZzRm5QVzEwbGZB"},
+        {"name":"Colo-Colo","url":"https://photos.google.com/share/AF1QipPbKxHAU4vz43AhA8NGTBWAmJUQgqHsNwi8zpA8gPWmEzjFMI-u0q2tvyAoWoaG5Q?key=YjdoR0V4TG5ZeHgwS2hRb1Q3aWMxU0dGWG1TR3Bn"},
+        {"name":"Cruz Azul","url":"https://photos.google.com/share/AF1QipPfVyLU18Sh6NSNgjKsy2iRBqWBNyBbkPEwMnkf-4OB7wAiibmBfT3aSSKuiFroOg?key=cWFQVC1zdHc2TG84bUYtWDJYQTVJaHF1U0JWVGdR"},
+        {"name":"Nacional","url":"https://photos.google.com/share/AF1QipO1f5nsHrW-FkG0n8lJXE5q2ndNDmC6xQw76-8icOxNFuLisg3f0bRIHTojwUYgSA?key=dnRXaUlpblVfanpOUFFSUzFvcFVSUkMyWVpzaXNn"},
+        {"name":"Olimpia","url":"https://photos.google.com/share/AF1QipNxcGg5MAC92-ZUKe2VSvCiK45wMjFv91kg_J2JRxetL299aehyznOVMPN1rk6jaA?key=TW5SMFp3OU5hMjVxdVFBU1QzZzlRQktVeURWTnpR"},
+        {"name":"PSV","url":"https://photos.google.com/share/AF1QipMtwUpkBu8KhlrJG3DLt9IeX0adlPCurhU40DvQhKO-6BUcUVnF5M6IL5N9_2-TyA?key=VFp4Wno1OTR0QUJibDUwU0dCOVBFSW9WRkVMNXdB"},
+        {"name":"Peñarol","url":"https://photos.google.com/share/AF1QipMtL9n245BLKzp_F_7fjvUXGiLYpPlTjNQTQ1u1XZc076tf1BammaQaHRU0zqBKOQ?key=RnJhT3VfTlZnbW1XUzM0LUFGcXVsWXo2YlhwMDJ3"},
+        {"name":"Porto","url":"https://photos.google.com/share/AF1QipPOAwrR57OhIo0fdTJINknBr6XkN5Ge09zXjN7D-ZwwSMUM59LpolHeGQD6BiHxcA?key=STNkOUViTUNDZjdrUmhESElQQWxFR2dDWWpIOUN3"},
+        {"name":"Rangers","url":"https://photos.google.com/share/AF1QipMc3KKQCebcklGv40qsC0QnGJALDsLwla6dfDwJr14PjKvuPk5ZvHpfTURaaVUy8A?key=ek45NkEyaHdpMS10Q29qTVJRS3JkaHUzWDViYzhB"},
+        {"name":"River Plate","url":"https://photos.google.com/share/AF1QipPLpdOPFy61pmOy0RB6-t4m8fPaFkL21y4iYR510odvKn7-5iue0DoSJvKnZxx5xA?key=Q05lWXkwNnBoSnhrM29oNFgzUUNRNlplaVl1MmlR"},
+        {"name":"Sporting CP","url":"https://photos.google.com/share/AF1QipOveoEJl2W9ts1-zl2Ff4VYwVMN8qRmhy_Iisrk0U68LoVjIO0ogmLGLYFW2FKd-Q?key=bzljaWxQUkFkVDZnbzBfOGo1Wkx0YVlOeVVfUXp3"}
+      ]
+    }
+  ]
+}

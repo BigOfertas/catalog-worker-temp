@@ -1,0 +1,193 @@
+name: Consolidate Remaining Club Source
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/consolidate-remaining-clubs.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  actions: read
+
+concurrency:
+  group: public-catalog-worker-consolidate-remaining-clubs
+  cancel-in-progress: false
+
+jobs:
+  consolidate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Download 66 valid album plans
+        uses: actions/download-artifact@v4
+        with:
+          repository: BigOfertas/catalog-worker-temp
+          run-id: 34555438971
+          github-token: ${{ github.token }}
+          pattern: next-plan-*
+          path: .artifacts/remaining/base
+          merge-multiple: false
+
+      - name: Verify productive source inventory
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from "node:fs";
+          import path from "node:path";
+          function walk(dir) {
+            const out = [];
+            for (const ent of fs.readdirSync(dir, { withFileTypes: true })) {
+              const p = path.join(dir, ent.name);
+              if (ent.isDirectory()) out.push(...walk(p));
+              else if (ent.name === "plan.json") out.push(p);
+            }
+            return out;
+          }
+          const files = walk(".artifacts/remaining/base");
+          if (files.length !== 66) throw new Error(`Esperados 66 planos produtivos válidos; encontrados ${files.length}.`);
+          const plans = files.map((file) => JSON.parse(fs.readFileSync(file, "utf8")));
+          if (plans.some((p) => !Array.isArray(p.products) || p.products.length === 0)) {
+            throw new Error("Plano produtivo vazio entre os 66 artifacts válidos.");
+          }
+          const identities = plans.map((p) => `${p.pdfGroupId}|${p.sourceGroup}`);
+          if (new Set(identities).size !== identities.length) throw new Error("Álbum produtivo duplicado.");
+          console.log(`PRODUCTIVE_SOURCE_OK albums=${plans.length}`);
+          NODE
+
+      - name: Generate verified crest-only coverage plans
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from "node:fs";
+          import path from "node:path";
+          const manifest = JSON.parse(fs.readFileSync("manifests/next-groups.json", "utf8"));
+          const keys = [
+            "premier-league-03",
+            "bundesliga-05", "bundesliga-07", "bundesliga-09", "bundesliga-13", "bundesliga-18",
+            "ligue-1-01", "ligue-1-07", "ligue-1-08", "ligue-1-09", "ligue-1-11", "ligue-1-12",
+          ];
+          const expectedNames = new Map([
+            ["premier-league-03", "Brentford"],
+            ["bundesliga-05", "Bochum"],
+            ["bundesliga-07", "Freiburg"],
+            ["bundesliga-09", "Hoffenheim"],
+            ["bundesliga-13", "Mainz"],
+            ["bundesliga-18", "Wolfsburg"],
+            ["ligue-1-01", "Brest"],
+            ["ligue-1-07", "Montpellier"],
+            ["ligue-1-08", "Nantes"],
+            ["ligue-1-09", "Nice"],
+            ["ligue-1-11", "Reims"],
+            ["ligue-1-12", "Rennes"],
+          ]);
+          const root = ".artifacts/remaining/coverage";
+          fs.mkdirSync(root, { recursive: true });
+          for (const key of keys) {
+            const group = manifest.groups.find((item) => key.startsWith(`${item.id}-`));
+            if (!group) throw new Error(`Grupo não encontrado: ${key}`);
+            const index = Number(key.slice(group.id.length + 1)) - 1;
+            const album = group.albums?.[index];
+            if (!album || album.name !== expectedNames.get(key)) {
+              throw new Error(`${key}: manifest mudou; esperado ${expectedNames.get(key)}, recebido ${album?.name}.`);
+            }
+            const plan = {
+              schemaVersion: 1,
+              batchKey: `temp-worker:${group.id}:${key}:no-products`,
+              sourceAlbumUrl: album.url,
+              pdfGroupId: group.id,
+              pdfGroupName: group.name,
+              sourceGroup: album.name,
+              mode: "club",
+              products: [],
+              summary: { products: 0, variants: 0, images: 0 },
+              sourceClassification: "club_crest_only_no_catalog_products",
+              verificationEvidence: {
+                probeRunId: 34556556731,
+                probeArtifactId: 10182797142,
+                probeArtifactSha256: "cd2243f96361cfa4591af502769f8840675e0ba2e32a746ad3c70e79a5cd6a40",
+              },
+            };
+            const dir = path.join(root, key);
+            fs.mkdirSync(dir, { recursive: true });
+            fs.writeFileSync(path.join(dir, "plan.json"), `${JSON.stringify(plan, null, 2)}\n`, "utf8");
+            console.log(`NO_PRODUCT_SOURCE_OK key=${key} team=${album.name}`);
+          }
+          NODE
+
+      - name: Merge and validate exact 78-album source
+        run: |
+          mkdir -p .artifacts/remaining/final
+          node scripts/merge-plans.mjs .artifacts/remaining .artifacts/remaining/final/remaining-clubs-plan.json
+          node --input-type=module <<'NODE'
+          import fs from "node:fs";
+          const manifest = JSON.parse(fs.readFileSync("manifests/next-groups.json", "utf8"));
+          const plan = JSON.parse(fs.readFileSync(".artifacts/remaining/final/remaining-clubs-plan.json", "utf8"));
+          const expectedGroups = ["premier-league", "bundesliga", "ligue-1", "mls", "outros-times"];
+          if (plan.summary?.albums !== 78) throw new Error(`Cobertura inválida: ${plan.summary?.albums}/78 álbuns.`);
+          const expected = new Set();
+          for (const group of manifest.groups.filter((g) => expectedGroups.includes(g.id))) {
+            for (const album of group.albums || []) expected.add(`${group.id}|${album.name}`);
+          }
+          if (expected.size !== 78) throw new Error(`Manifest esperado deveria conter 78 álbuns; contém ${expected.size}.`);
+          const actual = new Set((plan.albums || []).map((a) => `${a.group}|${a.team}`));
+          if (actual.size !== 78) throw new Error(`Plano consolidado contém ${actual.size} identidades únicas em vez de 78.`);
+          const missing = [...expected].filter((key) => !actual.has(key));
+          const extra = [...actual].filter((key) => !expected.has(key));
+          if (missing.length || extra.length) throw new Error(`Cobertura divergente missing=${missing.join(",")} extra=${extra.join(",")}`);
+          const sourceKeys = (plan.products || []).map((p) => p.sourceKey);
+          if (sourceKeys.some((key) => !key) || new Set(sourceKeys).size !== sourceKeys.length) {
+            throw new Error("sourceKey ausente ou duplicada no plano consolidado.");
+          }
+          const frozen = (plan.products || []).filter((p) => {
+            const text = `${p.sourceTitle || ""} ${p.name || ""}`.toUpperCase();
+            const adult = String(p.audience || "").toUpperCase() !== "INFANTIL";
+            return adult && (/CORTA[ -]?VENTO|WINDBREAKER|\bTREINO\b|\bVIAGEM\b/.test(text) || /\b(CONJUNTO|KIT)\b/.test(text));
+          });
+          if (frozen.length) throw new Error(`Categoria adulta bloqueada encontrada: ${frozen.slice(0,5).map((p)=>p.name).join(" | ")}`);
+          for (const groupId of expectedGroups) {
+            const sourceAlbums = (plan.albums || []).filter((a) => a.group === groupId);
+            const products = (plan.products || []).filter((p) => {
+              if (groupId === "mls") return p.competition === "MLS" || p.league === "MLS";
+              if (groupId === "outros-times") return p.league === "Outros Times";
+              const groupName = manifest.groups.find((g) => g.id === groupId)?.name;
+              return p.competition === groupName || p.league === groupName;
+            });
+            const variants = products.reduce((n,p)=>n+(p.variants?.length||0),0);
+            const images = products.reduce((n,p)=>n+(p.variants||[]).reduce((m,v)=>m+(v.images?.length||0),0),0);
+            console.log(`REMAINING_SOURCE_GROUP group=${groupId} albums=${sourceAlbums.length} products=${products.length} variants=${variants} images=${images}`);
+          }
+          console.log(`REMAINING_SOURCE_OK albums=${plan.summary.albums} products=${plan.summary.products} variants=${plan.summary.variants} images=${plan.summary.images}`);
+          NODE
+
+      - name: Publish normalized source plan in worker repository
+        run: |
+          set -euo pipefail
+          mkdir -p published
+          cp .artifacts/remaining/final/remaining-clubs-plan.json published/remaining-clubs-plan.json
+          git config user.name "BigOfertas"
+          git config user.email "contato@bigofertas.net"
+          git add published/remaining-clubs-plan.json
+          if git diff --cached --quiet; then
+            echo "PUBLISHED_SOURCE_UNCHANGED"
+            exit 0
+          fi
+          git commit -m "catalog: publish verified remaining club source"
+          git push origin HEAD:main
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: remaining-clubs-source-${{ github.run_id }}
+          retention-days: 30
+          if-no-files-found: warn
+          path: |
+            .artifacts/remaining/final/
+            .artifacts/remaining/coverage/

@@ -1,0 +1,159 @@
+name: Retry Sparse Remaining Club Albums
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/retry-sparse-next.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: public-catalog-worker-sparse-retry-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  retry:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    strategy:
+      fail-fast: false
+      max-parallel: 6
+      matrix:
+        key:
+          - premier-league-03
+          - bundesliga-05
+          - bundesliga-07
+          - bundesliga-09
+          - bundesliga-13
+          - bundesliga-18
+          - ligue-1-01
+          - ligue-1-07
+          - ligue-1-08
+          - ligue-1-09
+          - ligue-1-11
+          - ligue-1-12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - id: album
+        name: Resolve retry album
+        env:
+          RETRY_KEY: ${{ matrix.key }}
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from "node:fs";
+          const manifest = JSON.parse(fs.readFileSync("manifests/next-groups.json", "utf8"));
+          const key = process.env.RETRY_KEY;
+          const group = (manifest.groups || []).find((item) => key.startsWith(`${item.id}-`));
+          if (!group) throw new Error(`Grupo não encontrado para ${key}`);
+          const index = Number(key.slice(group.id.length + 1)) - 1;
+          const album = group.albums?.[index];
+          if (!album?.name || !/^https:\/\/photos\.google\.com\/share\//.test(album.url || "")) {
+            throw new Error(`Álbum inválido para ${key}`);
+          }
+          const out = {
+            group_id: group.id,
+            group_name: group.name,
+            competition: group.competition || "",
+            league: group.league || "",
+            team: album.name,
+            url: album.url,
+          };
+          for (const [name, value] of Object.entries(out)) {
+            fs.appendFileSync(process.env.GITHUB_OUTPUT, `${name}=${value}\n`);
+          }
+          console.log(`SPARSE_RETRY_RESOLVED key=${key} team=${album.name}`);
+          NODE
+      - name: Install Playwright
+        run: |
+          npm install --no-save --package-lock=false playwright@latest
+          npx playwright install --with-deps chromium
+      - name: Process sparse album
+        run: |
+          set -euo pipefail
+          mkdir -p ".artifacts/${{ matrix.key }}"
+          node scripts/process-album-sparse.mjs \
+            --group-id "${{ steps.album.outputs.group_id }}" \
+            --group-name "${{ steps.album.outputs.group_name }}" \
+            --competition "${{ steps.album.outputs.competition }}" \
+            --league "${{ steps.album.outputs.league }}" \
+            --team "${{ steps.album.outputs.team }}" \
+            --url "${{ steps.album.outputs.url }}" \
+            --output ".artifacts/${{ matrix.key }}/plan.json"
+      - name: Audit retry plan
+        env:
+          RETRY_KEY: ${{ matrix.key }}
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from "node:fs";
+          const key = process.env.RETRY_KEY;
+          const plan = JSON.parse(fs.readFileSync(`.artifacts/${key}/plan.json`, "utf8"));
+          const products = plan.products || [];
+          const variants = products.reduce((sum, product) => sum + (product.variants?.length || 0), 0);
+          const images = products.reduce((sum, product) => sum + (product.variants || []).reduce((inner, variant) => inner + (variant.images?.length || 0), 0), 0);
+          if (!products.length || !variants || !images) throw new Error(`${key}: plano incompleto.`);
+          console.log(`SPARSE_RETRY_PLAN_OK key=${key} products=${products.length} variants=${variants} images=${images}`);
+          NODE
+      - uses: actions/upload-artifact@v4
+        with:
+          name: retry-plan-${{ matrix.key }}
+          retention-days: 14
+          if-no-files-found: error
+          path: .artifacts/${{ matrix.key }}/plan.json
+
+  merge:
+    needs: retry
+    if: needs.retry.result == 'success'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Download 66 valid plans from previous run
+        uses: actions/download-artifact@v4
+        with:
+          repository: BigOfertas/catalog-worker-temp
+          run-id: 34555438971
+          github-token: ${{ github.token }}
+          pattern: next-plan-*
+          path: .artifacts/base
+          merge-multiple: false
+      - name: Download 12 recovered plans
+        uses: actions/download-artifact@v4
+        with:
+          pattern: retry-plan-*
+          path: .artifacts/retry
+          merge-multiple: false
+      - name: Merge and audit all remaining clubs
+        run: |
+          node scripts/merge-plans.mjs .artifacts .artifacts/merged-next-plan.json
+          node --input-type=module <<'NODE'
+          import fs from "node:fs";
+          const plan = JSON.parse(fs.readFileSync(".artifacts/merged-next-plan.json", "utf8"));
+          if (plan.summary?.albums !== 78) throw new Error(`Esperados 78 álbuns; consolidados ${plan.summary?.albums}.`);
+          const expectedGroups = ["premier-league", "bundesliga", "ligue-1", "mls", "outros-times"];
+          const groups = new Set((plan.albums || []).map((album) => album.group));
+          for (const group of expectedGroups) if (!groups.has(group)) throw new Error(`Grupo ausente: ${group}`);
+          for (const group of expectedGroups) {
+            const albums = (plan.albums || []).filter((album) => album.group === group);
+            const products = albums.reduce((sum, album) => sum + (album.products || 0), 0);
+            const variants = albums.reduce((sum, album) => sum + (album.variants || 0), 0);
+            const images = albums.reduce((sum, album) => sum + (album.images || 0), 0);
+            console.log(`REMAINING_GROUP_SUMMARY group=${group} albums=${albums.length} products=${products} variants=${variants} images=${images}`);
+          }
+          console.log(`REMAINING_MERGE_OK albums=${plan.summary.albums} products=${plan.summary.products} variants=${plan.summary.variants} images=${plan.summary.images}`);
+          NODE
+      - uses: actions/upload-artifact@v4
+        with:
+          name: merged-next-catalog-plans-recovered-${{ github.run_id }}
+          retention-days: 30
+          if-no-files-found: error
+          path: .artifacts/merged-next-plan.json

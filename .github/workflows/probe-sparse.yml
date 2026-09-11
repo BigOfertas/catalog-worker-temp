@@ -1,0 +1,61 @@
+name: Probe Sparse Remaining Albums
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/probe-sparse.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install Playwright
+        run: |
+          npm install --no-save --package-lock=false playwright@latest
+          npx playwright install --with-deps chromium
+      - name: Probe twelve sparse albums
+        run: |
+          set -euo pipefail
+          mkdir -p .artifacts/probes
+          node --input-type=module <<'NODE'
+          import fs from "node:fs";
+          import { spawnSync } from "node:child_process";
+          const manifest = JSON.parse(fs.readFileSync("manifests/next-groups.json", "utf8"));
+          const keys = [
+            "premier-league-03",
+            "bundesliga-05", "bundesliga-07", "bundesliga-09", "bundesliga-13", "bundesliga-18",
+            "ligue-1-01", "ligue-1-07", "ligue-1-08", "ligue-1-09", "ligue-1-11", "ligue-1-12",
+          ];
+          for (const key of keys) {
+            const group = manifest.groups.find((item) => key.startsWith(`${item.id}-`));
+            const index = Number(key.slice(group.id.length + 1)) - 1;
+            const album = group.albums[index];
+            const result = spawnSync(process.execPath, ["scripts/probe-album.mjs", album.url, album.name, `.artifacts/probes/${key}.json`], { stdio: "inherit" });
+            if (result.status !== 0) throw new Error(`Probe falhou para ${key}`);
+          }
+          NODE
+      - name: Summarize probes
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from "node:fs";
+          for (const file of fs.readdirSync(".artifacts/probes").filter((name) => name.endsWith(".json")).sort()) {
+            const report = JSON.parse(fs.readFileSync(`.artifacts/probes/${file}`, "utf8"));
+            console.log(`PROBE_SUMMARY key=${file.replace(/\.json$/, "")} team=${JSON.stringify(report.team)} pageTitle=${JSON.stringify(report.pageTitle)} requests=${report.requestMedia} perf=${report.perfMedia} imgs=${report.imgCount} visibleMedia=${report.visibleMedia} cssMedia=${report.cssMedia} titleCandidates=${report.titleCandidates.length} body=${JSON.stringify(report.bodyText.slice(0, 300))}`);
+          }
+          NODE
+      - uses: actions/upload-artifact@v4
+        with:
+          name: sparse-album-probes-${{ github.run_id }}
+          retention-days: 14
+          if-no-files-found: error
+          path: .artifacts/probes/
